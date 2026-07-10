@@ -13,6 +13,7 @@ from kaggle.api.kaggle_api_extended import KaggleApi
 api = KaggleApi()
 api.authenticate()
 
+
 api.dataset_download_files(
     "romanchereshnev/hugadb-human-gait-database",
     path="data/hugadb-human-gait-database",
