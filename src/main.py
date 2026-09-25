@@ -5,7 +5,7 @@ from pathlib import Path
 import pyarrow
 import fastparquet
 
-os.environ["KAGGLE_USERNAME"] = "твой_username_на_kaggle"
+os.environ["KAGGLE_USERNAME"] = "username"
 os.environ["KAGGLE_KEY"] = "KGAT_98e9ca998565fbaf404ed15955cb9977"
 
 from kaggle.api.kaggle_api_extended import KaggleApi
@@ -40,8 +40,8 @@ with zipfile.ZipFile(zip_path, 'r') as archive:
         name_parts = clean_name.split('_')
         
         try:
-            subject_id = int(name_parts[3]) # '01' -> 1
-            session_id = int(name_parts[4].replace('.csv', '')) # '00.csv' -> 0
+            subject_id = int(name_parts[3])
+            session_id = int(name_parts[4].replace('.csv', ''))
         except (IndexError, ValueError):
             continue 
             
@@ -53,13 +53,13 @@ with zipfile.ZipFile(zip_path, 'r') as archive:
             
             all_dataframes.append(df)
 
-print("Склеиваю все таблицы в единый DataFrame...")
+print("Таблицы в единый DataFrame...")
 
 full_df = pd.concat(all_dataframes, ignore_index=True)
 
 float_cols = full_df.select_dtypes(include=['float64']).columns
 full_df[float_cols] = full_df[float_cols].astype('float32')
 
-print(f"✅ Готово! Итоговый размер данных: {full_df.shape}")
+print(f"Итоговый размер данных: {full_df.shape}")
 
 full_df.to_parquet("hugadb_cleaned.parquet", index=False)
